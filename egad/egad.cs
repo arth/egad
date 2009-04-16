@@ -85,11 +85,30 @@ namespace egad
                     string cn_arg = cmd.Substring(3);
                     SetCNPath(cn_arg);
                 }
+                else if (cmdlow.Equals("help"))
+                {
+                    Help();
+                }
                 else
                 {
                     Console.WriteLine("Unrecognized command.");
                 }
             }
+        }
+
+        private static void Help()
+        {
+            Console.WriteLine("settings");
+            Console.WriteLine("cn");
+
+            Console.WriteLine("connect");
+            Console.WriteLine("disconnect");
+
+            Console.WriteLine("children");
+            Console.WriteLine("guid");
+            Console.WriteLine("properties");
+
+            Console.WriteLine("quit");
         }
 
         private static void Settings()
