@@ -2,6 +2,14 @@
 | e g a d |
 +---------+
 
+WEBSITE
+-------
+
+	Latest binary builds for Windows are available from the deployment URL:
+		http://wrudm.poorcoding.com/art/pub/egad/deploy/
+		
+	Source available at:
+		http://github.com/arth/egad
 
 GENERAL
 -------
