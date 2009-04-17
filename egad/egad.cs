@@ -1,4 +1,23 @@
-﻿using System;
+﻿/* egad
+ * ----
+ * 
+ * A simple console Active Directory LDAP Objects browser in C#.
+ *  
+ *      Website & source:   http://github.com/arth/egad
+ *      Windows binary:     http://wrudm.poorcoding.com/art/pub/egad/deploy
+ * 
+ * COPYRIGHT:
+ *      All rights reserved by the author, except:
+ *          This program and source is free to use & distribute, 
+ *          without restrictions EXCEPT:
+ *              - Thou shall not charge money for egad in any way.
+ *              - Thou shall not claim mine work as thine own.
+ *      
+ * AUTHOR: art@poorcoding.com
+ *
+ */
+
+using System;
 using System.DirectoryServices;
 
 namespace egad
@@ -100,6 +119,7 @@ namespace egad
                             if (cn_path.Length > 0)
                             {
                                 ent = ent.Parent;
+                                preprompt = ent.Name.ToString();
                             }
                         }
                         catch (Exception e)
@@ -109,14 +129,23 @@ namespace egad
                     }
                     else
                     {
+                        // Check that the cmd exists as a child of current cn_path
+
+                        if (ent.Children.Find(cmd) != null)
+                        {
+                            Console.WriteLine("Found child {0} in this Object", cmd);
+                        }
+
                         if (cn_path.Length > 0)
                         {
-                            cn_path = "CN=" + cmd + "," + cn_path;
+                            cn_path = cmd + "," + cn_path;
                         }
                         else
                         {
-                            cn_path = "CN=" + cmd;
+                            cn_path = cmd;
                         }
+
+                        preprompt = ent.Name.ToString();
 
                         BuildLDAPString();
 
@@ -272,17 +301,68 @@ namespace egad
 
         private static void Help()
         {
-            Console.WriteLine("settings");
-            Console.WriteLine("cn");
 
-            Console.WriteLine("connect");
-            Console.WriteLine("disconnect");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.BackgroundColor = ConsoleColor.DarkMagenta;
+            Console.WriteLine("\n  EGAD HELP  \n");
+            Console.ResetColor();
 
-            Console.WriteLine("children");
-            Console.WriteLine("guid");
-            Console.WriteLine("properties");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("GENERAL");
+            Console.WriteLine("-------");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("?, h, help");
+            Console.ForegroundColor = ConsoleColor.DarkYellow; Console.WriteLine("  Display the contents of the help file.");
+            Console.WriteLine("quit, exit");
+            Console.ForegroundColor = ConsoleColor.DarkYellow; Console.WriteLine("  Quit egad.");
+            Console.WriteLine("");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("CONFIGURATION");
+            Console.WriteLine("-------------");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.ForegroundColor = ConsoleColor.Yellow; Console.WriteLine("connect");
+            Console.ForegroundColor = ConsoleColor.DarkYellow; Console.WriteLine("  Connect to the Directory Object.");
+            Console.ForegroundColor = ConsoleColor.Yellow; Console.WriteLine("disconnect");
+            Console.ForegroundColor = ConsoleColor.DarkYellow; Console.WriteLine("  Disconnect from the Directory Object.");
+            Console.ForegroundColor = ConsoleColor.Yellow; Console.WriteLine("impersonate");
+            Console.ForegroundColor = ConsoleColor.DarkYellow; Console.WriteLine("  Toggle user impersonation for authentication.");
+            Console.ForegroundColor = ConsoleColor.Yellow; Console.WriteLine("settings");
+            Console.ForegroundColor = ConsoleColor.DarkYellow; Console.WriteLine("  Configure Domain Name, Domain Controller, Directory Object path,");
+            Console.WriteLine("  and authentication credentials.");
+            Console.WriteLine("");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Warning: failure to run through the settings will result in reduced");
+            Console.WriteLine("functionality and possibly strangeness in general.");
+            Console.WriteLine("");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("INFORMATION");
+            Console.WriteLine("-----------");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.ForegroundColor = ConsoleColor.Yellow; Console.WriteLine("c, children");
+            Console.ForegroundColor = ConsoleColor.DarkYellow; Console.WriteLine("  Display Object's children.");
+            Console.ForegroundColor = ConsoleColor.Yellow; Console.WriteLine("g, guid");
+            Console.ForegroundColor = ConsoleColor.DarkYellow; Console.WriteLine("  Display Object's GUID.");
+            Console.ForegroundColor = ConsoleColor.Yellow; Console.WriteLine("getpath");
+            Console.ForegroundColor = ConsoleColor.DarkYellow; Console.WriteLine("  Display Object's LDAP path.");
+            Console.ForegroundColor = ConsoleColor.Yellow; Console.WriteLine("getuser, whoami");
+            Console.ForegroundColor = ConsoleColor.DarkYellow; Console.WriteLine("  Display current username.");
+            Console.ForegroundColor = ConsoleColor.Yellow; Console.WriteLine("p, properties");
+            Console.ForegroundColor = ConsoleColor.DarkYellow; Console.WriteLine("  Display Object's properties.");
+            Console.WriteLine("");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("BROWSING OBJECTS");
+            Console.WriteLine("----------------");
+            Console.ForegroundColor = ConsoleColor.Yellow; Console.WriteLine("cd");
+            Console.ForegroundColor = ConsoleColor.DarkYellow; Console.WriteLine("  Change to a child object.");
 
-            Console.WriteLine("quit");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("\nNote: Until you provide a domain controller and FQDN domain name");
+            Console.WriteLine("in the \"settings\", egad will use the default domain, default domain");
+            Console.WriteLine("controller and default username; you will be unable to change Objects");
+            Console.WriteLine("or impersonate.\n");
+            
+            Console.ResetColor();
+
         }
 
         private static void ImpersonateToggle()
@@ -409,11 +489,6 @@ namespace egad
 
         private static void Settings()
         {
-
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("Until you provide a domain controller and FQDN domain name here, egad will use the default domain, default domain controller and default username; you will be unable to change CN paths (i.e., you will be able to view the DC's root properties only) or impersonate.");
-            Console.ResetColor();
-
             // Display and set domain controller
 
             string dc;
