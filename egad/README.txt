@@ -2,6 +2,26 @@
 | e g a d |
 +---------+
 
+/* egad
+ * ----
+ * 
+ * A simple console Active Directory LDAP Objects browser in C#.
+ *  
+ *      Website & source:   http://github.com/arth/egad
+ *      Windows binary:     http://wrudm.poorcoding.com/art/pub/egad/deploy
+ * 
+ * COPYRIGHT:
+ *      All rights reserved by the author, except:
+ *          This program and source is free to use & distribute, 
+ *          without restrictions EXCEPT:
+ *              - Thou shall not charge money for egad in any way.
+ *              - Thou shall not claim mine work as thine own.
+ *      
+ * AUTHOR: art@poorcoding.com
+ *
+ */
+ 
+
 WEBSITE
 -------
 
@@ -48,10 +68,19 @@ INFORMATION
 -----------
 
 	c, children
+		Display Object's children.
+		
 	g, guid
+		Display Object's GUID.
+		
 	getpath
+		Display Object's LDAP path.
+		
 	getuser, whoami
+		Display current username.
+		
 	p, properties
+		Display Object's properties.
 
 
 BROWSING OBJECTS
@@ -61,7 +90,11 @@ BROWSING OBJECTS
 		
 	cn
 		DEBUG: Set path directly.
-
+		
+--------------------------------------------------------------------------------
+  It is not suggested to use the commands marked DEBUG as they may result in
+  unexpected behavior. Use them at your own risk.
+--------------------------------------------------------------------------------
 
 EXAMPLE
 -------
