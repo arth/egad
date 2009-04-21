@@ -44,6 +44,7 @@ namespace egad
 
         static void Main(string[] args)
         {
+            Console.Title = "egad";
             Settings();
             Prompt();
         }
